@@ -2,6 +2,7 @@ import uuid from 'uuid/v4.js';
 import { validationResult } from 'express-validator';
 
 import HttpError from '../models/http-error.mjs';
+import User from '../models/user.mjs';
 
 let DUMMY_USERS = [
     {
@@ -19,7 +20,7 @@ const getUsers = (req, res, next) => {
 
 };
 
-const signUp = (req, res, next) => {
+const signUp = async (req, res, next) => {
 
     const errors = validationResult(req);
 
@@ -29,23 +30,45 @@ const signUp = (req, res, next) => {
 
     const { name, email, password } = req.body;
 
-    const hasUser = DUMMY_USERS.find( user => user.email === email );
+    let existingUser;
+    let createdUser;
+    try {
+        existingUser = await User.findOne({ email: email })
+    } catch (err) {
+        const error = new HttpError(
+            'User not found.', 500
+        );
+        return next(error);
+    }
 
-    if(hasUser) {
-        return next(new HttpError('User Already exists!!', 422));
-    };
-
-    const createdUser = {
-        id: uuid(),
+    createdUser = new User({
         name,
         email,
-        password
-    };
+        image: 'I am an image',
+        password,
+        places
+    });
 
-    DUMMY_USERS.push(createdUser);
+    if(existingUser) {
+        const error = HttpError(
+            'User exists already, please login instead.',
+            422
+        );
+        return next(error);
+    } else {
+
+        try {
+            await createdUser.save();
+        } catch (err) {
+            const error = new HttpError(
+                'Signing up failed, please try later.', 500
+            );
+            return next(error);
+        }
+    }
 
     res.status(201)
-    .json({user: createdUser});
+    .json({user: createdUser.toObject({ getters: true })});
 
 };
 
