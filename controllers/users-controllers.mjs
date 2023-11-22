@@ -13,10 +13,20 @@ let DUMMY_USERS = [
     }
 ]
 
-const getUsers = (req, res, next) => {
+const getUsers = async (req, res, next) => {
+
+    let users;
+    try {
+        users = await User.find({}, '-password');
+    } catch (err) {
+        const error = new HttpError(
+            'Fetching users failed, please try again later.', 500
+        );
+        return next(error);
+    }
 
     res.status(200)
-    .json(DUMMY_USERS);
+    .json({users: users.map(user => user.toObject({ getters: true }))});
 
 };
 
@@ -25,7 +35,7 @@ const signUp = async (req, res, next) => {
     const errors = validationResult(req);
 
     if(!errors.isEmpty()) {
-        return next(new HttpError('Invalid inputs passed', 422));
+        return next(new HttpError('Invalid inputs passeddd', 422));
     }
 
     const { name, email, password } = req.body;
@@ -33,7 +43,7 @@ const signUp = async (req, res, next) => {
     let existingUser;
     let createdUser;
     try {
-        existingUser = await User.findOne({ email: email })
+        existingUser = await User.findOne({ email: email });
     } catch (err) {
         const error = new HttpError(
             'User not found.', 500
@@ -46,7 +56,7 @@ const signUp = async (req, res, next) => {
         email,
         image: 'I am an image',
         password,
-        places
+        places: []
     });
 
     if(existingUser) {
@@ -72,15 +82,26 @@ const signUp = async (req, res, next) => {
 
 };
 
-const login = (req, res, next) => {
+const login = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    const identifiedUser = DUMMY_USERS.find( user => user.email === email );
+    let existingUser;
+    try {
+        existingUser = await User.findOne({ email: email });
+    } catch (err) {
+        const error = new HttpError(
+            'User not found.', 500
+        );
+        return next(error);
+    }
 
-    if(!identifiedUser || identifiedUser.password !== password){
-        return next(new HttpError('Credentials are worng', 401));
-    } 
+    if (!existingUser || existingUser.password !== password) {
+        const error = new HttpError(
+            'Invalid credentials.', 401
+        );
+        return next(error);
+    }
 
     res.status(200)
     .json({message: 'Logged in'});

@@ -32,5 +32,8 @@ mongoose.connect(`mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PA
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-.then(() => console.log('Connected to MongoDB'))
+.then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(5000);
+})
 .catch(err => console.error('Could not connect to MongoDB', err));
