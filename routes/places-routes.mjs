@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import { check } from'express-validator';
 
 import { getPlaceById, getPlacesByUserId, createPlace, updatePlace, deletePlace } from '../controllers/places-controller.mjs';
+import fileUpload from '../middleware/file-upload.mjs';
+import checkAuth from '../middleware/check-auth.mjs';
 
 const router = express.Router();
 
@@ -10,7 +12,10 @@ router.get('/:pid', getPlaceById);
 
 router.get('/user/:uid', getPlacesByUserId);
 
+router.use(checkAuth);
+
 router.post('/', 
+    fileUpload.single('image'),
     [
         check('title')
             .not()

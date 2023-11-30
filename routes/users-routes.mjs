@@ -2,13 +2,15 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { check } from'express-validator';
 
-import { getUsers, signUp, login } from '../controllers/users-controllers.mjs';
+import { getUsers, signup, login } from '../controllers/users-controllers.mjs';
+import fileUpload from '../middleware/file-upload.mjs';
 
 const router = express.Router();
 
 router.get('/', getUsers);
 
 router.post('/signup', 
+    fileUpload.single('image'),
     [
         check('name')
             .not()
@@ -19,7 +21,7 @@ router.post('/signup',
         check('password')
             .isLength({min: 6})
     ]
-    ,signUp);
+    ,signup);
 
 router.post('/login', login);
 
