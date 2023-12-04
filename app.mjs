@@ -4,7 +4,11 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
 
-import placesRoutes from './routes/places-routes.mjs';
+import productsRoutes from './routes/products-routes.mjs';
+import paymentsRoutes from './routes/payments-routes.mjs';
+import ordersRoutes from './routes/orders-routes.mjs';
+import cartsRoutes from './routes/carts-routes.mjs';
+import addressesRoutes from './routes/addresses-routes.mjs';
 import usersRoutes from './routes/users-routes.mjs';
 import HttpError from './models/http-error.mjs';
 
@@ -24,9 +28,19 @@ app.use((req, res, next) => {
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
-app.use('/api/places', placesRoutes);
+// app.use('/api/places', placesRoutes);
 
 app.use('/api/users', usersRoutes);
+
+app.use('/api/products', productsRoutes);
+
+app.use('/api/payments', paymentsRoutes);
+
+app.use('/api/orders', ordersRoutes);
+
+app.use('/api/carts', cartsRoutes);
+
+app.use('/api/addresses', addressesRoutes);
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
@@ -48,7 +62,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose.connect(
-    `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@mongodb-0.mongodb-service.ecommerce.svc.cluster.local:27017/ecommerce-template?replicaSet=rs0&retryWrites=true&w=majority`, {
+    `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.CONNECTION_STRING}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

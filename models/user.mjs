@@ -4,11 +4,17 @@ import mongooseUniqueValidator from 'mongoose-unique-validator';
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
-  name: { type: String, required: true },
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, minlength: 6 },
+  password: { type: String, required: true, minlength: 6 }, // This needs to be hashed
   image: { type: String, required: true },
-  places: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Place' }]
+  role: { type: String, required: true },
+  adresses: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Address' }],
+  paymentmethods: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Payment' }],
+  cart: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Cart' }],
+  orders: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Order' }],
+  products: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Product' }],
 });
 
 userSchema.plugin(mongooseUniqueValidator);
