@@ -12,7 +12,7 @@ const userSchema = new Schema({
   adresses: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Address' }],
   paymentmethods: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Payment' }],
   cart: { type: mongoose.Types.ObjectId, required: true, ref: 'Cart' },
-  orders: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Order' }],
+  orders: [{ type: mongoose.Types.ObjectId, ref: 'Order' }],
   products: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Product' }],
 });
 

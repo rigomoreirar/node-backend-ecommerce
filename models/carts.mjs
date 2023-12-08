@@ -7,7 +7,7 @@ const cartSchema = new Schema({
     product: { type: mongoose.Types.ObjectId, required: true, ref: 'Product' },
     amount: { type: Number, required: true }
   }],
-  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
+  creator: { type: mongoose.Types.ObjectId, ref: 'User' }
 });
 
 export default model('Cart', cartSchema);
