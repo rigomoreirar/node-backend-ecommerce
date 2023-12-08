@@ -10,7 +10,7 @@ const getUserAddresses = async (req, res, next) => {
     if (!user || user.adresses.length === 0) {
       throw new HttpError('No addresses found for this user.', 404);
     }
-    res.json({ addresses: user.adresses });
+    res.json({ addresses: user.adresses.toObject({ getters: true }) });
   } catch (error) {
     return next(error);
   }
@@ -30,7 +30,7 @@ const addUserAddresses = async (req, res, next) => {
 
 const deleteUserAddresses = async (req, res, next) => {
   const userId = req.params.uid;
-  const addressId = req.body.addressId; // Validate and sanitize this data
+  const addressId = req.params.addressId;
 
   try {
     const user = await CRUD.read(User, userId);

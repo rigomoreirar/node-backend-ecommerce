@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
+import cors from 'cors';
 
 import productsRoutes from './routes/products-routes.mjs';
 import paymentsRoutes from './routes/payments-routes.mjs';
@@ -10,9 +11,13 @@ import ordersRoutes from './routes/orders-routes.mjs';
 import cartsRoutes from './routes/carts-routes.mjs';
 import addressesRoutes from './routes/addresses-routes.mjs';
 import usersRoutes from './routes/users-routes.mjs';
+import categoryRoutes from './routes/categories-routes.mjs';
+
 import HttpError from './models/http-error.mjs';
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -26,9 +31,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+// app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 // app.use('/api/places', placesRoutes);
+app.use('/api/categories', categoryRoutes);
 
 app.use('/api/users', usersRoutes);
 
@@ -42,10 +48,20 @@ app.use('/api/carts', cartsRoutes);
 
 app.use('/api/addresses', addressesRoutes);
 
+
+
 app.use((req, res, next) => {
-    const error = new HttpError('Could not find this route.', 404);
+    const error = new HttpError(`Could not find the requested route: ${req.method} ${req.originalUrl}`, 404);
+    console.error(`Route not found: ${req.method} ${req.originalUrl}`);
+    if (req.body) {
+        console.error('Request body:', req.body);
+    }
+    if (req.query) {
+        console.error('Query parameters:', req.query);
+    }
     return next(error);
 });
+
 
 app.use((error, req, res, next) => {
     if (req.file) {

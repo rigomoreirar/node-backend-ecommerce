@@ -12,7 +12,7 @@ export default async (req, res, next) => {
       throw new Error('Authentication failed!');
     }
     // This needs to be made into a secret
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share');
+    const decodedToken = jwt.verify(token, `${process.env.JWT_CODE}`);
     req.userData = { userId: decodedToken.userId };
 
     // Find the user based on the userId from the token

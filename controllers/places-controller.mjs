@@ -4,7 +4,7 @@ import fs from 'fs';
 
 import HttpError from '../models/http-error.mjs';
 import getCoordsForAddress from '../utils/location.mjs';
-import Place from '../models/place.mjs';
+import Place from '../models/places.mjs';
 import User from '../models/user.mjs';
 
 const getPlaceById = async (req, res, next) => {

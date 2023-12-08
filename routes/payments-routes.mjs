@@ -13,6 +13,6 @@ router.get('/:uid', getUserPayments);
 
 router.post('/:uid', addUserPayments);
 
-router.delete('/:uid', deleteUserPayments);
+router.delete('/:uid/:paymentId', deleteUserPayments);
 
 export default router;

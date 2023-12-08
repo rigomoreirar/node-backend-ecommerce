@@ -9,7 +9,10 @@ const orderSchema = new Schema({
     product: { type: mongoose.Types.ObjectId, required: true, ref: 'Product' },
     amount: { type: Number, required: true }
   }],
-  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
+  orderinformation: { creator: {type: mongoose.Types.ObjectId, required: true, ref: 'User'},
+            payment: {type: mongoose.Types.ObjectId, required: true, ref: 'Payment'},
+            address: {type: mongoose.Types.ObjectId, required: true, ref: 'Address'},
+             }
 });
 
 export default model('Order', orderSchema);

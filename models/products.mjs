@@ -13,7 +13,7 @@ const productSchema = new Schema({
   description: { type: String, required: true },
   shortdescription: { type: String, required: true },
   edt: { type: String, required: true }, // estimated delivery time
-  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
+  category: { type: mongoose.Types.ObjectId, required: true, ref: 'Category' },
   orders: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Order' }]
 });
 

@@ -13,6 +13,6 @@ router.get('/:uid', getUserAddresses);
 
 router.post('/:uid', addUserAddresses);
 
-router.delete('/:uid', deleteUserAddresses);
+router.delete('/:uid/:addressId', deleteUserAddresses);
 
 export default router;

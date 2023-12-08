@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.use(checkAuth);
 
-router.get('/:uid', getCurrentOrders);
+router.get('/current/:uid', getCurrentOrders);
 
-router.get('/:uid', getUserOrdersHistory);
+router.get('/history/:uid', getUserOrdersHistory);
 
 export default router;

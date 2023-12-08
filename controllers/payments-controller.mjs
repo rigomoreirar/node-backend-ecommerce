@@ -10,7 +10,7 @@ const getUserPayments = async (req, res, next) => {
     if (!user || user.paymentmethods.length === 0) {
       throw new HttpError('No payment methods found for this user.', 404);
     }
-    res.json({ paymentMethods: user.paymentmethods });
+    res.json({ paymentMethods: user.paymentmethods.toObject({ getters: true }) });
   } catch (error) {
     return next(error);
   }
@@ -30,7 +30,7 @@ const addUserPayments = async (req, res, next) => {
 
 const deleteUserPayments = async (req, res, next) => {
   const userId = req.params.uid;
-  const paymentId = req.body.paymentId; // Validate and sanitize this data
+  const paymentId = req.params.paymentId; // Validate and sanitize this data
 
   try {
     const user = await CRUD.read(User, userId);

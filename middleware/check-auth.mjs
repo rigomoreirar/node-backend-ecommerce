@@ -6,16 +6,18 @@ export default (req, res, next) => {
     return next();
   }
   try {
-    const token = req.headers.authorization.split(' ')[1]; // Authorization: 'Bearer TOKEN'
+    const token = req.headers.authorization?.split(' ')[1]; // Authorization: 'Bearer TOKEN'
     if (!token) {
-      throw new Error('Authentication failed!');
+      throw new HttpError('Authentication failed! No token provided.', 401);
     }
-    //This need to be made into a secret
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share');
+    const decodedToken = jwt.verify(token, process.env.JWT_CODE);
+    if (!decodedToken) {
+      throw new HttpError('Authentication failed! Invalid token.', 403);
+    }
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (err) {
-    const error = new HttpError('Authentication failed!', 403);
+    const error = new HttpError('Authentication failed! ' + err.message, 403);
     return next(error);
   }
 };

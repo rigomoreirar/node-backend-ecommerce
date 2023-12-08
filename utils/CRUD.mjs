@@ -20,7 +20,7 @@ const CRUD = {
       return item;
     } catch (err) {
       await session.abortTransaction();
-      throw new HttpError('Creating item failed, please try again.', 500);
+      throw new HttpError('Creating item failed, please try again.' + err.message, 500);
     } finally {
       session.endSession();
     }
@@ -35,9 +35,11 @@ const CRUD = {
       }
       return item;
     } catch (err) {
+      console.error(err);  // Add this line to log the error
       throw new HttpError('Reading item failed, please try again later.', 500);
     }
   },
+  
 
   // Update operation
   update: async (Model, id, updateData) => {
@@ -71,7 +73,7 @@ const CRUD = {
       await session.commitTransaction();
     } catch (err) {
       await session.abortTransaction();
-      throw new HttpError('Deleting item failed, please try again later.', 500);
+      throw new HttpError('Deleting item failed, please try again later.'+err.message, 500);
     } finally {
       session.endSession();
     }
